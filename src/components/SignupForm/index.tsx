@@ -77,6 +77,18 @@ export default function SignupForm() {
             onSubmit={handleSubmit}
             className="flex flex-col gap-4"
           >
+            <motion.a
+              href="https://www.producthunt.com/products/datacia"
+              target="_blank"
+              rel="noreferrer"
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="inline-flex items-center justify-center gap-2 self-center rounded-full bg-[#DA552F]/10 px-4 py-1 text-sm font-medium text-[#DA552F]"
+            >
+              <span className="h-2 w-2 rounded-full bg-[#DA552F]" />
+              <span>Launching on Product Hunt · Mon, 16 March 2026</span>
+            </motion.a>
+
             <div className="relative group">
               <div className="absolute -inset-0.5 bg-gradient-to-r from-primary to-accent rounded-xl opacity-50 group-hover:opacity-75 transition duration-500 blur-sm" />
               <div className="relative flex flex-col sm:flex-row gap-2 p-2 bg-background/80 backdrop-blur-xl rounded-xl border border-border">
