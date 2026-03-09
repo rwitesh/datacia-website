@@ -194,9 +194,9 @@ const blocks: FeatureBlock[] = [
 
 const FeaturesSection = () => {
   return (
-    <div className="space-y-0 p-12" id="features">
+    <div className="space-y-0 p-6" id="features">
       {blocks.map((block) => (
-        <section key={block.id} id={block.id} className="py-6">
+        <section key={block.id} id={block.id} className="py-24">
           <div className="container mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 30 }}

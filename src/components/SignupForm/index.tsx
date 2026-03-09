@@ -117,6 +117,10 @@ export default function SignupForm() {
               </div>
             </div>
 
+            <p className="text-xs text-muted-foreground text-center">
+              Join the waitlist and get <span className="font-semibold">3 months of Premium for free</span> when we launch.
+            </p>
+
             {error && (
               <motion.p
                 initial={{ opacity: 0 }}
