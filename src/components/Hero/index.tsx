@@ -52,9 +52,9 @@ const HeroSection = () => {
             </span>
           </motion.div>
 
-          <h1 className="mx-auto max-w-4xl text-5xl font-bold tracking-tight text-foreground sm:text-7xl lg:text-8xl leading-[0.95]">
+          <h1 className="mx-auto max-w-4xl text-5xl font-semibold tracking-tight text-foreground sm:text-7xl lg:text-8xl leading-[0.95]">
             The database client <br className="hidden sm:block" />
-            engineers <span className="text-primary text-glow">deserve.</span>
+            that lets you <span className="text-primary text-glow">focus.</span>
           </h1>
 
           <p className="mx-auto mt-8 max-w-xl text-lg text-muted-foreground leading-relaxed sm:text-xl">
