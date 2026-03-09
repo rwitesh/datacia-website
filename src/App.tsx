@@ -12,8 +12,8 @@ export function App() {
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/download" element={<DownloadPage />} />
-          <Route path="/pricing" element={<PricingPage />} />
+          <Route path="/download_not_launched" element={<DownloadPage />} />
+          <Route path="/pricing_not_launched" element={<PricingPage />} />
         </Routes>
       </BrowserRouter>
     </main>
