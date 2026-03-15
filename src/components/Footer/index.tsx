@@ -1,22 +1,9 @@
 import { Link } from "react-router-dom";
 
 const footerLinks = {
-//   Product: [
-//     { label: "Features", href: "/#features" },
-//     { label: "AI", href: "/#ai" },
-//     { label: "Pricing", href: "/pricing" },
-//     { label: "Download", href: "/download" },
-//   ],
-//   Resources: [
-//     { label: "Docs", href: "#" },
-//     { label: "Release Notes", href: "#" },
-//     { label: "Contact", href: "#" },
-//   ],
-//   Legal: [
-//     { label: "About", href: "#" },
-//     { label: "Privacy Policy", href: "#" },
-//     { label: "Licensing", href: "#" },
-//   ],
+  Legal: [
+    { label: "Privacy Policy", href: "/privacy" },
+  ],
 };
 
 const Footer = () => {

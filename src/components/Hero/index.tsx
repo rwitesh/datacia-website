@@ -63,7 +63,7 @@ const HeroSection = () => {
           </p>
 
           {/* Download CTA — uncomment when downloads are ready and remove SignupForm below */}
-          {/* <div className="mt-12 flex flex-col items-center justify-center gap-3">
+          <div className="mt-12 flex flex-col items-center justify-center gap-3">
             <Link to="/download" state={{ platform: os }}>
               <Button
                 size="lg"
@@ -92,11 +92,11 @@ const HeroSection = () => {
             <span>macOS & Windows</span>
             <span className="h-3 w-px bg-border/50" />
             <span>No account required</span>
-          </motion.div> */}
+          </motion.div>
 
-          <div className="mt-12 flex flex-col items-center justify-center">
+          {/* <div className="mt-12 flex flex-col items-center justify-center">
             <SignupForm />
-          </div>
+          </div> */}
         </motion.div>
 
         {/* Hero mockup */}

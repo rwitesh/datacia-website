@@ -4,6 +4,7 @@ import { ScrollToTop } from "./components/ScrollToTop";
 import { Home } from "./pages/Home";
 import DownloadPage from "./pages/Download";
 import PricingPage from "./pages/Prices";
+import PrivacyPage from "./pages/Privacy";
 
 export function App() {
   return (
@@ -12,8 +13,9 @@ export function App() {
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/download_not_launched" element={<DownloadPage />} />
-          <Route path="/pricing_not_launched" element={<PricingPage />} />
+          <Route path="/download" element={<DownloadPage />} />
+          <Route path="/pricing" element={<PricingPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
         </Routes>
       </BrowserRouter>
     </main>

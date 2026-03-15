@@ -49,9 +49,9 @@ export function NavBar() {
           <Link to="/#features" onClick={onFeaturesClick} className="text-foreground">
             Features
           </Link>
-          {/* <Link to="/pricing" className="text-foreground">
+          <Link to="/pricing" className="text-foreground">
             Pricing
-          </Link> */}
+          </Link>
           {/* <Link to="/" className="text-foreground">
             About
           </Link> */}
