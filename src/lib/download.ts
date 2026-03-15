@@ -2,13 +2,12 @@ import axios from "axios";
 
 const DOWNLOAD_API_BASE = "https://api.datacia.app";
 
-export type DownloadOS = "darwin" | "windows" | "linux";
+export type DownloadOS = "darwin" | "windows";
 
 export function osToDownloadParam(os: string): DownloadOS | null {
   const s = os.toLowerCase();
   if (s.includes("mac") || s === "darwin") return "darwin";
   if (s.includes("win")) return "windows";
-  if (s.includes("linux")) return "linux";
   return null;
 }
 

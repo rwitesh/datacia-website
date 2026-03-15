@@ -11,12 +11,12 @@ export function detectOS(): OS {
   const userAgent = window.navigator.userAgent.toLowerCase();
   const platform = window.navigator.platform.toLowerCase();
 
+  if (/android/.test(userAgent)) return "Android";
+  if (/iphone|ipad|ipod/.test(userAgent)) return "iOS";
+
   if (platform.includes("win")) return "Windows";
   if (platform.includes("mac")) return "Mac";
   if (platform.includes("linux")) return "Linux";
-
-  if (/android/.test(userAgent)) return "Android";
-  if (/iphone|ipad|ipod/.test(userAgent)) return "iOS";
 
   return "Unknown";
 }
@@ -64,21 +64,35 @@ const HeroSection = () => {
 
           {/* Download CTA — uncomment when downloads are ready and remove SignupForm below */}
           <div className="mt-12 flex flex-col items-center justify-center gap-3">
-            <Link to="/download" state={{ platform: os }}>
-              <Button
-                size="lg"
-                className="gap-2 glow-cyan font-mono px-10 py-6 text-sm cursor-pointer"
-              >
-                <Download className="h-4 w-4" />
-                Download for {os}
-              </Button>
-            </Link>
-            <Link
-              to="/download"
-              className="text-xs font-mono text-muted-foreground hover:text-primary transition-colors"
-            >
-              Other platforms →
-            </Link>
+            {os === "Windows" || os === "Mac" ? (
+              <>
+                <Link to="/download" state={{ platform: os }}>
+                  <Button
+                    size="lg"
+                    className="gap-2 glow-cyan font-mono px-10 py-6 text-sm cursor-pointer"
+                  >
+                    <Download className="h-4 w-4" />
+                    Download for {os}
+                  </Button>
+                </Link>
+                <Link
+                  to="/download"
+                  className="text-xs font-mono text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Other platforms →
+                </Link>
+              </>
+            ) : (
+              <Link to="/download">
+                <Button
+                  size="lg"
+                  className="gap-2 glow-cyan font-mono px-10 py-6 text-sm cursor-pointer"
+                >
+                  <Download className="h-4 w-4" />
+                  Download
+                </Button>
+              </Link>
+            )}
           </div>
 
           <motion.div
