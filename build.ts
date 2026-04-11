@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 import plugin from "bun-plugin-tailwind";
 import { existsSync } from "fs";
-import { rm } from "fs/promises";
+import { copyFile, rm } from "fs/promises";
 import path from "path";
 
 if (process.argv.includes("--help") || process.argv.includes("-h")) {
@@ -140,6 +140,21 @@ const result = await Bun.build({
   },
   ...cliConfig,
 });
+
+if (!result.success) {
+  console.error("Build failed:", result.logs);
+  process.exit(1);
+}
+
+// Meta tags reference /preview.png by URL; copy so deploy includes it (SPA fallback otherwise returns HTML).
+const previewSrc = path.join(process.cwd(), "src", "preview.png");
+const previewDest = path.join(outdir, "preview.png");
+if (!existsSync(previewSrc)) {
+  console.error("Missing src/preview.png (required for Open Graph / Twitter cards)");
+  process.exit(1);
+}
+await copyFile(previewSrc, previewDest);
+console.log(`📎 Copied preview.png → ${path.relative(process.cwd(), previewDest)}`);
 
 const end = performance.now();
 
