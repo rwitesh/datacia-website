@@ -27,6 +27,15 @@ export function NavBar() {
     }
   };
 
+  const onSupportClick = (e: React.MouseEvent) => {
+    // If the Support section exists on the current page, scroll to it.
+    // Otherwise, fall back to navigating to /#support (Home) which scrolls.
+    if (document.getElementById("support")) {
+      e.preventDefault();
+      scrollToSection("support");
+    }
+  };
+
   return (
     <nav className="fixed top-0 left-0 right-10 z-50 bg-background/80 backdrop-blur-xl">
       <div className="flex justify-between items-center h-14 mt-2">
@@ -51,6 +60,9 @@ export function NavBar() {
           </Link>
           <Link to="/pricing" className="text-foreground">
             Pricing
+          </Link>
+          <Link to="/#support" onClick={onSupportClick} className="text-foreground">
+            Support
           </Link>
           {/* <Link to="/" className="text-foreground">
             About

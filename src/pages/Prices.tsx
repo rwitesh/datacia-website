@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Check, Minus, ArrowRight } from "lucide-react";
+import { Check, Minus, ArrowRight, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Toggle } from "@/components/ui/toggle";
 import { NavBar } from "@/components/NavBar";
+import SupportSection from "@/components/Support";
 import Footer from "@/components/Footer";
 
 const PRICING = {
@@ -93,6 +94,12 @@ export default function PricingPage() {
   const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");
   const getPrice = (plan: "pro" | "premium") =>
     billing === "monthly" ? PRICING[plan].monthly : PRICING[plan].yearly;
+
+  const scrollToSupport = () => {
+    document
+      .getElementById("support")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -212,6 +219,18 @@ export default function PricingPage() {
             })}
           </motion.div>
 
+          <div className="mb-20 flex justify-center">
+            <Button
+              variant="outline"
+              onClick={scrollToSupport}
+              className="gap-2 font-mono text-xs cursor-pointer"
+            >
+              <Mail className="h-4 w-4 text-primary" />
+              Contact Support
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -293,6 +312,7 @@ export default function PricingPage() {
           </motion.div>
         </div>
       </main>
+      <SupportSection />
       <Footer />
     </div>
   );
