@@ -1,33 +1,21 @@
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import { NavBar } from "@/components/NavBar";
-import HeroSection from "@/components/Hero";
-import DatabaseStrip from "@/components/DatabaseStrip";
-import FeaturesSection from "@/components/Features";
-import SupportSection from "@/components/Support";
-import Footer from "@/components/Footer";
+import { EngineStrip } from "@/components/home/engine-strip";
+import { FeatureGrid } from "@/components/home/feature-grid";
+import { FeatureStory } from "@/components/home/feature-story";
+import { FinalCta } from "@/components/home/final-cta";
+import { GhostDemo } from "@/components/home/ghost-demo";
+import { Hero } from "@/components/home/hero";
+import { OpenSource } from "@/components/home/open-source";
 
-export function Home() {
-  const { hash } = useLocation();
-
-  useEffect(() => {
-    if (!hash) return;
-    const el = document.getElementById(hash.slice(1));
-    if (!el) return;
-    const id = requestAnimationFrame(() => {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-    return () => cancelAnimationFrame(id);
-  }, [hash]);
-
+export default function HomePage() {
   return (
-    <div>
-      <NavBar />
-      <HeroSection />
-      <DatabaseStrip />
-      <FeaturesSection />
-      <SupportSection />
-      <Footer />
-    </div>
+    <>
+      <Hero />
+      <EngineStrip />
+      <FeatureStory />
+      <GhostDemo />
+      <FeatureGrid />
+      <OpenSource />
+      <FinalCta />
+    </>
   );
 }

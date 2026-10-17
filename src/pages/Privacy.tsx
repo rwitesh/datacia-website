@@ -1,108 +1,174 @@
-import { NavBar } from "@/components/NavBar";
-import Footer from "@/components/Footer";
+import type { ReactNode } from "react";
+import { Check } from "lucide-react";
+import { Reveal } from "@/components/motion/reveal";
+import { Container } from "@/components/ui/container";
+import { LINKS, SUPPORT_EMAIL } from "@/lib/site";
+
+const LAST_UPDATED = "October 17, 2026";
+
+const AT_A_GLANCE = [
+  "No account, licence or payment — DataCia is free",
+  "Your credentials, queries and data never leave your device",
+  "Anonymous crash reports only, tied to a one-way device hash",
+  "Open source, so every claim here can be checked in the code",
+];
+
+function Section({ id, title, children }: { id: string; title: string; children: ReactNode }) {
+  return (
+    <Reveal>
+      <section id={id} aria-labelledby={`${id}-title`} className="border-t border-line py-10">
+        <h2 id={`${id}-title`} className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
+          {title}
+        </h2>
+        <div className="mt-4 space-y-4 text-[16px] leading-relaxed text-muted-foreground [&_li]:pl-1 [&_strong]:font-medium [&_strong]:text-foreground [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-5">
+          {children}
+        </div>
+      </section>
+    </Reveal>
+  );
+}
+
+function ExternalLink({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">
+      {children}
+    </a>
+  );
+}
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <NavBar />
-      <main className="flex-1 container mx-auto px-6 py-16 max-w-3xl mt-12">
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">DataCia Privacy Policy</h1>
-        <p className="text-sm text-muted-foreground mb-12">Last updated: March 2026</p>
+    <Container width="narrow" className="py-20 sm:py-28">
+      <Reveal immediate>
+        <p className="text-sm font-semibold text-accent">Privacy Policy</p>
+        <h1 className="text-display mt-3 text-5xl sm:text-6xl">Private by design.</h1>
+        <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
+          DataCia is a free, open-source desktop database client. This policy explains the small amount of information
+          the app and this website handle, and why.
+        </p>
+        <p className="mt-4 text-sm text-subtle-foreground">Last updated {LAST_UPDATED}</p>
+      </Reveal>
 
-        <div className="space-y-8 text-base leading-relaxed text-muted-foreground">
-          <section>
-            <h2 className="text-xl font-bold text-foreground mb-3">Overview</h2>
-            <p>
-              DataCia is a desktop database client. We built it to be private by design, your database credentials never leave your device, and your data never passes through our servers. This policy explains the limited information we do collect, why we collect it, and what we do with it.
-            </p>
-          </section>
+      <Reveal immediate delay={0.1}>
+        <ul className="surface mt-12 grid gap-4 p-6 sm:grid-cols-2 sm:p-8">
+          {AT_A_GLANCE.map((point) => (
+            <li key={point} className="flex gap-3 text-[15px] leading-snug">
+              <Check className="mt-0.5 size-4 shrink-0 text-success" />
+              {point}
+            </li>
+          ))}
+        </ul>
+      </Reveal>
 
-          <section>
-            <h2 className="text-xl font-bold text-foreground mb-3">What We Collect</h2>
+      <div className="mt-12">
+        <Section id="diagnostics" title="Diagnostic and error data">
+          <p>
+            To find and fix crashes, the app sends error logs and crash reports to{" "}
+            <ExternalLink href="https://sentry.io/privacy/">Sentry</ExternalLink>, our error-monitoring provider. Each
+            report includes:
+          </p>
+          <ul>
+            <li>The error message, stack trace and related log lines</li>
+            <li>Operating system, OS version and CPU architecture</li>
+            <li>App version</li>
+            <li>
+              A <strong>hardware ID</strong> — a one-way SHA-256 hash of your device identifier. It can't be reversed
+              and isn't linked to any personal information; it only lets us group errors from the same machine.
+            </li>
+          </ul>
+          <p>
+            We don't collect your name, email address, location or usage analytics, and we don't use advertising or
+            analytics trackers.
+          </p>
+        </Section>
 
-            <div className="mt-4 space-y-4">
-              <div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">1. Diagnostic & Error Data</h3>
-                <p className="mb-2">To improve stability and fix device-specific bugs, we collect:</p>
-                <ul className="list-disc pl-5 space-y-1">
-                  <li>Error logs and crash reports</li>
-                  <li>Operating system and architecture</li>
-                  <li>App version</li>
-                  <li>A hardware ID, a one-way hash generated from your device. This is not linked to any personal information and cannot be used to identify you. It only helps us correlate errors from the same device across sessions.</li>
-                </ul>
-                <p className="mt-3 font-medium">
-                  We do not collect your name, location, browsing history, or any information that can identify you as a person. We also do not use third-party analytics trackers (like Google Analytics).
-                </p>
-              </div>
+        <Section id="not-collected" title="What we never collect">
+          <ul>
+            <li>
+              <strong>Database credentials</strong> — stored only on your device, encrypted with a key bound to that
+              machine
+            </li>
+            <li>
+              <strong>Queries, results or any data</strong> from your databases
+            </li>
+            <li>
+              <strong>AI prompts and responses</strong>
+            </li>
+            <li>
+              <strong>Accounts or contact details</strong> — the app has no sign-in
+            </li>
+          </ul>
+        </Section>
 
-              <div className="mt-6">
-                <h3 className="text-lg font-semibold text-foreground mb-2">2. Subscription & Account</h3>
-                <p className="mb-2">If you purchase a subscription or activate a license, we collect your email address. We use this to:</p>
-                <ul className="list-disc pl-5 space-y-1">
-                  <li>Identify your account</li>
-                  <li>Deliver your license key</li>
-                  <li>Reach out if there's a problem with your subscription</li>
-                </ul>
-                <p className="mt-3 font-medium">
-                  We do not sell or share your email with third parties.
-                </p>
-              </div>
-            </div>
-          </section>
+        <Section id="connections" title="How connections work">
+          <p>
+            Database connections, including SSH tunnels, go directly from your device to your database. DataCia doesn't
+            route, proxy or inspect that traffic.
+          </p>
+          <p>
+            The AI assistant is optional. If you add your own Google Gemini API key, requests go straight from your
+            device to Google and are covered by{" "}
+            <ExternalLink href="https://policies.google.com/privacy">Google's privacy policy</ExternalLink>. We never
+            see your key or the content of those requests.
+          </p>
+        </Section>
 
-          <section>
-            <h2 className="text-xl font-bold text-foreground mb-3">What We Do Not Collect</h2>
-            <ul className="list-disc pl-5 space-y-1">
-              <li><strong>Database credentials</strong> — stored locally on your device, encrypted, never sent to our servers</li>
-              <li><strong>Query contents or results</strong></li>
-              <li><strong>Any data from your databases</strong></li>
-              <li><strong>Personal identifiers</strong> beyond email (for subscribers)</li>
-            </ul>
-          </section>
+        <Section id="updates" title="Downloads and updates">
+          <p>
+            DataCia is distributed through{" "}
+            <ExternalLink href={LINKS.releases}>GitHub Releases</ExternalLink>. The app checks GitHub for new versions
+            and downloads updates from there, and the download page on this website reads release details from GitHub's
+            public API in your browser. In both cases GitHub receives a standard web request, including your IP
+            address, under the{" "}
+            <ExternalLink href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">
+              GitHub Privacy Statement
+            </ExternalLink>
+            .
+          </p>
+        </Section>
 
-          <section>
-            <h2 className="text-xl font-bold text-foreground mb-3">How Connections Work</h2>
-            <p className="mb-3">
-              All database connections are made directly from your device to your database. DataCia does not route, proxy, or inspect your database traffic. Your queries go straight from your machine to your database, we are not in that path.
-            </p>
-            <p>
-              Similarly, any AI-powered features make calls directly from your device to the respective LLM provider. We do not see, log, or store the content of those calls.
-            </p>
-          </section>
+        <Section id="website" title="This website">
+          <p>
+            datacia.app sets no cookies and runs no analytics. Like any website, our hosting provider may process
+            standard request logs, such as IP addresses, to serve and protect the site.
+          </p>
+        </Section>
 
-          <section>
-            <h2 className="text-xl font-bold text-foreground mb-3">Data Storage & Deletion</h2>
-            <p className="mb-3">
-              Database credentials and connection details are stored locally on your device in encrypted form. Nothing is uploaded to the cloud.
-            </p>
-            <p>
-              If you have purchased a subscription and would like your email address and account records to be permanently deleted, please contact us.
-            </p>
-          </section>
+        <Section id="storage" title="Storage and deletion">
+          <p>
+            Connections, saved queries, history and settings are stored locally on your device. Uninstalling DataCia
+            and removing its app-data folder deletes them.
+          </p>
+          <p>
+            Earlier versions of DataCia offered paid licences, processed by LemonSqueezy. If you bought one and would
+            like your email address and licence records deleted, email us and we'll take care of it.
+          </p>
+        </Section>
 
-          <section>
-            <h2 className="text-xl font-bold text-foreground mb-3">Payments</h2>
-            <p>
-              Payments are processed by LemonSqueezy, powered by Stripe. When you add a payment method or complete a purchase, you are subject to LemonSqueezy's and Stripe's terms of service and privacy policies. DataCia does not store or have access to your payment card information.
-            </p>
-          </section>
+        <Section id="open-source" title="Open source">
+          <p>
+            The full source code of the app is public at <ExternalLink href={LINKS.repo}>github.com/rwitesh/datacia</ExternalLink>
+            , so you can verify exactly what it sends and build it yourself.
+          </p>
+        </Section>
 
-          <section>
-            <h2 className="text-xl font-bold text-foreground mb-3">Changes to This Policy</h2>
-            <p>
-              If we make significant changes, we'll notify subscribers via email. The latest version will always be available at datacia.app/privacy.
-            </p>
-          </section>
+        <Section id="changes" title="Changes to this policy">
+          <p>
+            If this policy changes, we'll update this page and the date at the top. Significant changes will also be
+            noted in the release notes of the version that introduces them.
+          </p>
+        </Section>
 
-          <section>
-            <h2 className="text-xl font-bold text-foreground mb-3">Contact</h2>
-            <p>
-              Questions? Reach out at <a href="mailto:rwiteshbera@gmail.com" className="text-primary hover:underline">rwiteshbera@gmail.com</a>.
-            </p>
-          </section>
-        </div>
-      </main>
-      <Footer />
-    </div>
+        <Section id="contact" title="Contact">
+          <p>
+            Questions or requests? Email{" "}
+            <a href={`mailto:${SUPPORT_EMAIL}`} className="text-accent hover:underline">
+              {SUPPORT_EMAIL}
+            </a>
+            .
+          </p>
+        </Section>
+      </div>
+    </Container>
   );
 }
