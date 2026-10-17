@@ -42,7 +42,7 @@ function AssistantMock() {
     <div className="rounded-2xl border border-line-strong bg-surface p-5 font-mono text-[13px] shadow-[0_30px_80px_-30px_rgba(0,0,0,0.8)] sm:p-6">
       <div className="mb-5 flex items-center gap-2 text-xs text-muted-foreground">
         <Sparkles className="size-3.5 text-accent" />
-        AI Assistant · Gemini
+        AI Assistant
       </div>
       <div className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-md bg-accent px-4 py-2.5 font-sans text-sm text-accent-foreground">
         Why is this query slow?
@@ -111,7 +111,7 @@ const CHAPTERS: Chapter[] = [
   {
     eyebrow: "AI assistant",
     title: "Ask in plain English.",
-    body: "Generate SQL, explain plans and fix errors with Google Gemini — using your own API key, called straight from your machine.",
+    body: "Generate SQL, explain plans and fix errors. The assistant reads your schema and runs read-only queries to check its answers. Use Anthropic, OpenAI, Gemini, OpenRouter, OpenCode or a local model, called straight from your machine.",
     visual: <AssistantMock />,
   },
 ];
