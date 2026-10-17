@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useInView } from "motion/react";
 import { Sparkles } from "lucide-react";
-import exportLightImg from "@/assets/export-light.webp";
 import exportImg from "@/assets/export.webp";
 import jsonImg from "@/assets/json.webp";
 import queryImg from "@/assets/query.webp";
@@ -34,28 +33,6 @@ function PanelShot({ src, alt, width, height, className }: ShotProps) {
       )}
     >
       <img src={src} alt={alt} width={width} height={height} className="w-full rounded-[12px]" loading="lazy" />
-    </div>
-  );
-}
-
-/** The export menu in both themes, stacked so the pair overlaps diagonally. */
-function ExportPair() {
-  return (
-    <div className="mx-auto grid max-w-2xl">
-      <PanelShot
-        src={exportLightImg}
-        alt="Export menu in light mode"
-        width={593}
-        height={361}
-        className="w-4/5 self-start justify-self-end [grid-area:1/1]"
-      />
-      <PanelShot
-        src={exportImg}
-        alt="Selected rows with the copy and export menu open in dark mode"
-        width={593}
-        height={361}
-        className="mt-[22%] w-4/5 self-start justify-self-start [grid-area:1/1]"
-      />
     </div>
   );
 }
@@ -115,7 +92,15 @@ const CHAPTERS: Chapter[] = [
     eyebrow: "Results & export",
     title: "Your data, any shape.",
     body: "A fast grid with sorting, resizing and cell selection. Copy or export the selection as JSON, CSV or a crisp PNG for your next doc.",
-    visual: <ExportPair />,
+    visual: (
+      <PanelShot
+        src={exportImg}
+        alt="Selected rows with the copy and export menu open"
+        width={593}
+        height={361}
+        className="mx-auto max-w-xl"
+      />
+    ),
   },
   {
     eyebrow: "Row inspector",
