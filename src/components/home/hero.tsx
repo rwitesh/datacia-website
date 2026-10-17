@@ -1,6 +1,7 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { motion, useScroll, useSpring, useTransform } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
+import appLightImg from "@/assets/app-light.webp";
 import appImg from "@/assets/app.webp";
 import { DownloadButton } from "@/components/download/download-button";
 import { GitHubIcon } from "@/components/icons/brand";
@@ -30,9 +31,46 @@ function ReleasePill() {
   );
 }
 
-/** App screenshot that tilts up from a perspective and settles flat as you scroll. */
+type Appearance = "dark" | "light";
+
+const SHOWCASE: Record<Appearance, { src: string; label: string }> = {
+  dark: { src: appImg, label: "Dark" },
+  light: { src: appLightImg, label: "Light" },
+};
+
+function AppearanceSwitch({ value, onChange }: { value: Appearance; onChange: (next: Appearance) => void }) {
+  return (
+    <div role="radiogroup" aria-label="App appearance" className="inline-flex rounded-full border border-line bg-surface p-1">
+      {(Object.keys(SHOWCASE) as Appearance[]).map((key) => (
+        <button
+          key={key}
+          type="button"
+          role="radio"
+          aria-checked={value === key}
+          onClick={() => onChange(key)}
+          className="relative rounded-full px-4 py-1.5 text-[13px] font-medium text-muted-foreground transition-colors aria-checked:text-background"
+        >
+          {value === key && (
+            <motion.span
+              layoutId="appearance-pill"
+              transition={{ type: "spring", stiffness: 500, damping: 40 }}
+              className="absolute inset-0 rounded-full bg-foreground"
+            />
+          )}
+          <span className="relative">{SHOWCASE[key].label}</span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * App screenshot that tilts up from a perspective and settles flat as you
+ * scroll, with a switch to preview the light and dark themes.
+ */
 function HeroShowcase() {
   const ref = useRef<HTMLDivElement>(null);
+  const [appearance, setAppearance] = useState<Appearance>("dark");
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "center center"] });
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.4 });
 
@@ -52,14 +90,26 @@ function HeroShowcase() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.4, delay: 0.5, ease: EASE_APPLE }}
       >
-        <motion.img
-          src={appImg}
-          alt="DataCia showing the customers table of a SQLite database"
-          width={1391}
-          height={879}
-          style={{ rotateX, scale, transformOrigin: "center top" }}
-          className="w-full drop-shadow-[0_40px_80px_rgba(0,0,0,0.6)]"
-        />
+        {/* Both themes share one grid cell so switching never shifts layout. */}
+        <motion.div style={{ rotateX, scale, transformOrigin: "center top" }} className="grid">
+          {(Object.keys(SHOWCASE) as Appearance[]).map((key) => (
+            <motion.img
+              key={key}
+              src={SHOWCASE[key].src}
+              alt={`DataCia in ${key} mode showing the customers table of a SQLite database`}
+              aria-hidden={appearance !== key}
+              width={1491}
+              height={879}
+              initial={false}
+              animate={{ opacity: appearance === key ? 1 : 0 }}
+              transition={{ duration: 0.6, ease: EASE_APPLE }}
+              className="w-full [grid-area:1/1]"
+            />
+          ))}
+        </motion.div>
+        <div className="mt-6 flex justify-center">
+          <AppearanceSwitch value={appearance} onChange={setAppearance} />
+        </div>
       </motion.div>
     </div>
   );

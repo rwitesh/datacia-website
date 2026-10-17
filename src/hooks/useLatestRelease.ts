@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { fetchLatestRelease, type LatestRelease } from "@/lib/releases";
 
+export type ReleaseStatus = "loading" | "ready" | "error";
+
 type State =
   | { status: "loading"; release: null }
   | { status: "ready"; release: LatestRelease }

@@ -6,7 +6,7 @@ import { PLATFORM_ICON, type DownloadRouteState } from "@/components/download/do
 import { EASE_APPLE, Reveal } from "@/components/motion/reveal";
 import { buttonVariants } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
-import { useLatestRelease } from "@/hooks/useLatestRelease";
+import { useLatestRelease, type ReleaseStatus } from "@/hooks/useLatestRelease";
 import { usePlatform } from "@/hooks/usePlatform";
 import { PLATFORM_LABEL, PLATFORMS, type Platform } from "@/lib/platform";
 import { formatBytes, formatReleaseDate, type LatestRelease } from "@/lib/releases";
@@ -53,7 +53,7 @@ function PlatformCard({
 }: {
   platform: Platform;
   release: LatestRelease | null;
-  status: "loading" | "ready" | "error";
+  status: ReleaseStatus;
   recommended: boolean;
 }) {
   const Icon = PLATFORM_ICON[platform];
@@ -92,7 +92,15 @@ function PlatformCard({
   );
 }
 
-function StartedNotice({ platform, release, status }: { platform: Platform; release: LatestRelease | null; status: string }) {
+function StartedNotice({
+  platform,
+  release,
+  status,
+}: {
+  platform: Platform;
+  release: LatestRelease | null;
+  status: ReleaseStatus;
+}) {
   const asset = release?.installers[platform];
   const failed = status === "error" || (status === "ready" && !asset);
 
