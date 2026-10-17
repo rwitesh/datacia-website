@@ -8,9 +8,9 @@ const LAST_UPDATED = "October 17, 2026";
 
 const AT_A_GLANCE = [
   "No account, licence or payment — DataCia is free",
-  "Your credentials, queries and data never leave your device",
-  "Anonymous crash reports only, tied to a one-way device hash",
-  "Open source, so every claim here can be checked in the code",
+  "Your credentials, queries and data never reach us",
+  "AI is optional and talks only to the provider you choose",
+  "Anonymous error reports, which you can turn off",
 ];
 
 function Section({ id, title, children }: { id: string; title: string; children: ReactNode }) {
@@ -68,7 +68,10 @@ export default function PrivacyPage() {
             report includes:
           </p>
           <ul>
-            <li>The error message, stack trace and related log lines</li>
+            <li>
+              The error message, stack trace and related log lines. An error message can include a database or host
+              name.
+            </li>
             <li>Operating system, OS version and CPU architecture</li>
             <li>App version</li>
             <li>
@@ -77,8 +80,15 @@ export default function PrivacyPage() {
             </li>
           </ul>
           <p>
-            We don't collect your name, email address, location or usage analytics, and we don't use advertising or
-            analytics trackers.
+            If an AI request fails, we log the provider, the model name and the type of error (for example a timeout).
+            We never log the prompt, the reply or your API key.
+          </p>
+          <p>
+            Reports never include queries, results or passwords. We don't collect your name, email address, location or
+            usage analytics, and we don't use advertising or analytics trackers.
+          </p>
+          <p>
+            To stop sending reports, turn off <strong>Send anonymous error reports</strong> in Settings → Privacy.
           </p>
         </Section>
 
@@ -92,7 +102,7 @@ export default function PrivacyPage() {
               <strong>Queries, results or any data</strong> from your databases
             </li>
             <li>
-              <strong>AI prompts and responses</strong>
+              <strong>AI API keys, prompts or responses</strong>
             </li>
             <li>
               <strong>Accounts or contact details</strong> — the app has no sign-in
@@ -105,11 +115,33 @@ export default function PrivacyPage() {
             Database connections, including SSH tunnels, go directly from your device to your database. DataCia doesn't
             route, proxy or inspect that traffic.
           </p>
+        </Section>
+
+        <Section id="ai" title="AI assistant">
           <p>
-            The AI assistant is optional. If you add your own Google Gemini API key, requests go straight from your
-            device to Google and are covered by{" "}
-            <ExternalLink href="https://policies.google.com/privacy">Google's privacy policy</ExternalLink>. We never
-            see your key or the content of those requests.
+            The AI assistant is optional and stays off until you connect a provider. When you use it, information is
+            sent directly from your device to the provider you choose: Anthropic, OpenAI, Google Gemini, OpenRouter,
+            OpenCode, or a model server you run yourself. DataCia doesn't operate an AI service and never receives your
+            prompts, responses or API keys. API keys are stored encrypted on your device.
+          </p>
+          <p>
+            To answer a request, the assistant may share the following with your provider: your messages and the recent
+            conversation, the SQL in your editor and its last error, table names and structures, and the results of
+            read-only queries it runs on the open connection, which can include records from your database.
+          </p>
+          <p>
+            Your provider processes this information under its own terms and privacy policy, which govern whether it is
+            retained or used for training:{" "}
+            <ExternalLink href="https://www.anthropic.com/legal/privacy">Anthropic</ExternalLink>,{" "}
+            <ExternalLink href="https://openai.com/policies/privacy-policy/">OpenAI</ExternalLink>,{" "}
+            <ExternalLink href="https://policies.google.com/privacy">Google</ExternalLink>,{" "}
+            <ExternalLink href="https://openrouter.ai/privacy">OpenRouter</ExternalLink> and{" "}
+            <ExternalLink href="https://opencode.ai">OpenCode</ExternalLink>. With a local model, the information stays
+            on your machine.
+          </p>
+          <p>
+            If a database holds personal or sensitive data, make sure your chosen provider is appropriate for it before
+            using the assistant with that connection.
           </p>
         </Section>
 
@@ -136,8 +168,9 @@ export default function PrivacyPage() {
 
         <Section id="storage" title="Storage and deletion">
           <p>
-            Connections, saved queries, history and settings are stored locally on your device. Uninstalling DataCia
-            and removing its app-data folder deletes them.
+            Connections, saved queries, history, settings, AI API keys and your AI chat are stored locally on your
+            device. Uninstalling DataCia and removing its app-data folder deletes them. Anything already sent to an AI
+            provider is kept or deleted under that provider's policy.
           </p>
           <p>
             Earlier versions of DataCia offered paid licences, processed by LemonSqueezy. If you bought one and would
