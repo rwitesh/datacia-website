@@ -1,5 +1,5 @@
 import { REPO } from "./site";
-import type { Platform } from "./platform";
+import type { Arch, Platform } from "./platform";
 
 /**
  * Builds are published as GitHub Releases. We read the latest release from the
@@ -14,18 +14,15 @@ export interface ReleaseAsset {
   size: number;
 }
 
-/** A single-architecture installer offered next to the universal one. */
-export interface AlternateInstaller extends ReleaseAsset {
-  label: string;
-}
+/** The universal build runs everywhere; the single-architecture builds are smaller. */
+export type Build = Arch | "universal";
 
 export interface LatestRelease {
   version: string;
   publishedAt: Date;
   notesUrl: string;
-  installers: Partial<Record<Platform, ReleaseAsset>>;
-  /** Smaller per-architecture installers; empty for releases before v2.3.0. */
-  alternates: Record<Platform, AlternateInstaller[]>;
+  /** Per-arch builds exist from v2.3.0 on; older releases only have universal. */
+  installers: Record<Platform, Partial<Record<Build, ReleaseAsset>>>;
   checksumsUrl: string | null;
 }
 
@@ -43,21 +40,17 @@ interface GitHubRelease {
 }
 
 /** Installer file names as produced by the app's release workflow. */
-const INSTALLER_PATTERNS: Record<Platform, RegExp> = {
-  mac: /-darwin-universal\.dmg$/,
-  windows: /-windows-universal-installer\.exe$/,
-};
-
-/** Single-architecture installers, in display order. */
-const ALTERNATE_PATTERNS: Record<Platform, { label: string; pattern: RegExp }[]> = {
-  mac: [
-    { label: "Apple Silicon", pattern: /-darwin-arm64\.dmg$/ },
-    { label: "Intel", pattern: /-darwin-amd64\.dmg$/ },
-  ],
-  windows: [
-    { label: "x64", pattern: /-windows-amd64-installer\.exe$/ },
-    { label: "ARM64", pattern: /-windows-arm64-installer\.exe$/ },
-  ],
+const INSTALLER_PATTERNS: Record<Platform, Record<Build, RegExp>> = {
+  mac: {
+    universal: /-darwin-universal\.dmg$/,
+    arm64: /-darwin-arm64\.dmg$/,
+    amd64: /-darwin-amd64\.dmg$/,
+  },
+  windows: {
+    universal: /-windows-universal-installer\.exe$/,
+    arm64: /-windows-arm64-installer\.exe$/,
+    amd64: /-windows-amd64-installer\.exe$/,
+  },
 };
 
 function toAsset(asset: GitHubAsset): ReleaseAsset {
@@ -65,17 +58,11 @@ function toAsset(asset: GitHubAsset): ReleaseAsset {
 }
 
 function parseRelease(data: GitHubRelease): LatestRelease {
-  const installers: LatestRelease["installers"] = {};
-  for (const [platform, pattern] of Object.entries(INSTALLER_PATTERNS) as [Platform, RegExp][]) {
-    const match = data.assets.find((a) => pattern.test(a.name));
-    if (match) installers[platform] = toAsset(match);
-  }
-
-  const alternates = { mac: [], windows: [] } as LatestRelease["alternates"];
-  for (const [platform, options] of Object.entries(ALTERNATE_PATTERNS) as [Platform, typeof ALTERNATE_PATTERNS.mac][]) {
-    for (const { label, pattern } of options) {
+  const installers: LatestRelease["installers"] = { mac: {}, windows: {} };
+  for (const [platform, patterns] of Object.entries(INSTALLER_PATTERNS) as [Platform, Record<Build, RegExp>][]) {
+    for (const [build, pattern] of Object.entries(patterns) as [Build, RegExp][]) {
       const match = data.assets.find((a) => pattern.test(a.name));
-      if (match) alternates[platform].push({ ...toAsset(match), label });
+      if (match) installers[platform][build] = toAsset(match);
     }
   }
 
@@ -86,7 +73,6 @@ function parseRelease(data: GitHubRelease): LatestRelease {
     publishedAt: new Date(data.published_at),
     notesUrl: data.html_url,
     installers,
-    alternates,
     checksumsUrl: checksums?.browser_download_url ?? null,
   };
 }

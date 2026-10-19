@@ -1,5 +1,4 @@
 import logo from "@/assets/logo.webp";
-import { DownloadButton } from "@/components/download/download-button";
 import { Reveal } from "@/components/motion/reveal";
 import { Container } from "@/components/ui/container";
 import { useLatestRelease } from "@/hooks/useLatestRelease";
@@ -29,10 +28,7 @@ export function FinalCta() {
           </p>
         </Reveal>
         <Reveal delay={0.15}>
-          <div className="mt-10 flex justify-center">
-            <DownloadButton />
-          </div>
-          <p className="mt-5 h-5 text-[13px] text-subtle-foreground">
+          <p className="mt-8 h-5 text-[13px] text-subtle-foreground">
             {release && `Version ${release.version} · Released ${formatReleaseDate(release.publishedAt)}`}
           </p>
         </Reveal>

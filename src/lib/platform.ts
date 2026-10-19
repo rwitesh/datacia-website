@@ -26,3 +26,41 @@ export function detectPlatform(): Platform | null {
   if (platform.includes("win")) return "windows";
   return null;
 }
+
+/** CPU architectures DataCia ships single-architecture builds for. */
+export type Arch = "arm64" | "amd64";
+
+type UADataWithHints = { getHighEntropyValues?: (hints: string[]) => Promise<{ architecture?: string; bitness?: string }> };
+
+/**
+ * Best-effort guess of the visitor's CPU architecture. Returns `null` when we
+ * can't tell confidently, in which case the universal build is the safe pick.
+ */
+export async function detectArch(platform: Platform): Promise<Arch | null> {
+  const uaData = (navigator as Navigator & { userAgentData?: UADataWithHints }).userAgentData;
+  try {
+    // Chromium reports the real architecture, including "arm" on Apple Silicon.
+    const { architecture, bitness } = (await uaData?.getHighEntropyValues?.(["architecture", "bitness"])) ?? {};
+    if (architecture === "arm") return "arm64";
+    if (architecture === "x86" && bitness === "64") return "amd64";
+  } catch {
+    // Hints were refused; fall through to the heuristics below.
+  }
+
+  // A wrong single-arch build won't install or run, so only trust explicit signals. Firefox
+  // and other browsers without Client Hints report an x64-looking UA even on Windows on ARM.
+  if (platform === "windows") return /arm64|aarch64/i.test(navigator.userAgent) ? "arm64" : null;
+
+  // Safari and Firefox always claim an Intel Mac, but an unmasked GPU name can tell. Safari
+  // masks it as "Apple GPU" on Intel Macs too, so that alone isn't proof of Apple Silicon.
+  try {
+    const gl = document.createElement("canvas").getContext("webgl");
+    const info = gl?.getExtension("WEBGL_debug_renderer_info");
+    const renderer = String(gl?.getParameter(info ? info.UNMASKED_RENDERER_WEBGL : gl.RENDERER) ?? "");
+    if (/apple m\d/i.test(renderer)) return "arm64";
+    if (/intel|amd|radeon/i.test(renderer)) return "amd64";
+  } catch {
+    // No WebGL; we can't tell.
+  }
+  return null;
+}
