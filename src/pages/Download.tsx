@@ -1,9 +1,7 @@
-import { useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { AnimatePresence, motion } from "motion/react";
-import { ArrowDown, ArrowUpRight, ChevronDown, CircleAlert, ShieldCheck } from "lucide-react";
-import { PLATFORM_ICON, type DownloadRouteState } from "@/components/download/download-button";
-import { EASE_APPLE, Reveal } from "@/components/motion/reveal";
+import { useState } from "react";
+import { ArrowDown, ArrowUpRight, ChevronDown, ShieldCheck } from "lucide-react";
+import { PLATFORM_ICON } from "@/components/download/download-button";
+import { Reveal } from "@/components/motion/reveal";
 import { buttonVariants } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { useLatestRelease, type ReleaseStatus } from "@/hooks/useLatestRelease";
@@ -49,20 +47,6 @@ const INSTALL_STEPS: Record<Platform, string[]> = {
     "Then choose Run anyway. SmartScreen flags any app without a paid publisher certificate.",
   ],
 };
-
-/** Reads the one-shot "start this download" request and clears it from history. */
-function useRequestedDownload(): Platform | null {
-  const { pathname, state } = useLocation();
-  const navigate = useNavigate();
-  const [requested] = useState(() => (state as DownloadRouteState | null)?.start ?? null);
-
-  // Drop the request from history so a reload doesn't download again.
-  useEffect(() => {
-    if (requested) navigate(pathname, { replace: true, state: null });
-  }, [requested, pathname, navigate]);
-
-  return requested;
-}
 
 function PlatformCard({
   platform,
@@ -160,77 +144,10 @@ function PlatformCard({
   );
 }
 
-function StartedNotice({ asset, status }: { asset: ReleaseAsset | null | undefined; status: ReleaseStatus }) {
-  const failed = status === "error" || asset === null;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: -12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: EASE_APPLE }}
-      role="status"
-      className={cn(
-        "mx-auto mb-12 flex max-w-2xl items-center gap-3 rounded-2xl border px-5 py-4 text-sm",
-        failed ? "border-danger/30 bg-danger/10" : "border-accent/30 bg-accent/10",
-      )}
-    >
-      {failed ? (
-        <>
-          <CircleAlert className="size-5 shrink-0 text-danger" />
-          <span className="flex-1">
-            We couldn't reach GitHub just now. You can grab the installer from the{" "}
-            <a href={LINKS.latestRelease} target="_blank" rel="noopener noreferrer" className="font-medium text-accent hover:underline">
-              latest release
-            </a>
-            .
-          </span>
-        </>
-      ) : (
-        <>
-          <ArrowDown className="size-5 shrink-0 animate-bounce text-accent" />
-          <span className="flex-1">
-            {asset ? (
-              <>
-                Your download of <span className="font-mono text-[13px]">{asset.name}</span> has started.{" "}
-                <a href={asset.url} className="font-medium text-accent hover:underline">
-                  Try again
-                </a>
-              </>
-            ) : (
-              "Preparing your download…"
-            )}
-          </span>
-        </>
-      )}
-    </motion.div>
-  );
-}
-
 export default function DownloadPage() {
   const { status, release } = useLatestRelease();
   const detected = usePlatform();
   const arch = useArch(detected);
-  const requested = useRequestedDownload();
-  const startedRef = useRef(false);
-
-  // The requested installer: `undefined` until the release and architecture are known, `null` if missing.
-  const requestedArch = requested === detected ? arch : null;
-  const requestedInstallers = requested && release?.installers[requested];
-  const requestedAsset =
-    requestedInstallers && requestedArch !== undefined
-      ? (requestedInstallers[defaultBuild(requestedInstallers, requestedArch)] ?? null)
-      : status === "error"
-        ? null
-        : undefined;
-
-  // Start the requested installer as soon as its URL is known.
-  useEffect(() => {
-    if (!requestedAsset || startedRef.current) return;
-    startedRef.current = true;
-    window.location.assign(requestedAsset.url);
-  }, [requestedAsset]);
-
-  const highlighted = requested ?? detected;
 
   return (
     <div className="relative overflow-hidden">
@@ -240,8 +157,6 @@ export default function DownloadPage() {
       />
 
       <Container className="py-20 sm:py-28">
-        <AnimatePresence>{requested && <StartedNotice asset={requestedAsset} status={status} />}</AnimatePresence>
-
         <div className="text-center">
           <Reveal immediate>
             <h1 className="text-display text-5xl sm:text-7xl">
@@ -271,7 +186,7 @@ export default function DownloadPage() {
                 platform={platform}
                 release={release}
                 status={status}
-                recommended={platform === highlighted}
+                recommended={platform === detected}
                 arch={platform === detected ? arch : null}
               />
             </Reveal>

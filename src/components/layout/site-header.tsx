@@ -5,7 +5,6 @@ import { Menu, X } from "lucide-react";
 import logo from "@/assets/logo.webp";
 import { GitHubIcon } from "@/components/icons/brand";
 import { AnnouncementBar } from "@/components/layout/announcement-bar";
-import { buttonVariants } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { EASE_APPLE } from "@/components/motion/reveal";
 import { LINKS } from "@/lib/site";
@@ -72,9 +71,6 @@ export function SiteHeader() {
             >
               <GitHubIcon className="size-[18px]" />
             </a>
-            <Link to="/download" className={cn(buttonVariants({ size: "sm" }), "hidden sm:inline-flex")}>
-              Download
-            </Link>
             <button
               type="button"
               onClick={() => setMenuOpen((open) => !open)}
