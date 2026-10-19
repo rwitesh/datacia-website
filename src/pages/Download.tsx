@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowDown, ArrowUpRight, CircleAlert, ShieldCheck } from "lucide-react";
@@ -58,6 +58,7 @@ function PlatformCard({
 }) {
   const Icon = PLATFORM_ICON[platform];
   const asset = release?.installers[platform];
+  const alternates = release?.alternates[platform] ?? [];
   const details = PLATFORM_DETAILS[platform];
 
   return (
@@ -86,8 +87,29 @@ function PlatformCard({
       </a>
 
       <p className="mt-4 h-4 font-mono text-[11px] text-subtle-foreground">
-        {asset ? `${details.format} · ${formatBytes(asset.size)}` : status === "loading" ? "" : details.format}
+        {asset
+          ? `${alternates.length > 0 ? "Universal · " : ""}${details.format} · ${formatBytes(asset.size)}`
+          : status === "loading"
+            ? ""
+            : details.format}
       </p>
+
+      {alternates.length > 0 && (
+        <p className="mt-3 text-xs text-muted-foreground">
+          Other downloads:{" "}
+          {alternates.map((alt, i) => (
+            <Fragment key={alt.name}>
+              {i > 0 && " · "}
+              <span className="whitespace-nowrap">
+                <a href={alt.url} title={alt.name} className="font-medium text-accent hover:underline">
+                  {alt.label}
+                </a>{" "}
+                <span className="font-mono text-[11px] text-subtle-foreground">{formatBytes(alt.size)}</span>
+              </span>
+            </Fragment>
+          ))}
+        </p>
+      )}
     </div>
   );
 }

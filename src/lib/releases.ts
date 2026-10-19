@@ -14,11 +14,18 @@ export interface ReleaseAsset {
   size: number;
 }
 
+/** A single-architecture installer offered next to the universal one. */
+export interface AlternateInstaller extends ReleaseAsset {
+  label: string;
+}
+
 export interface LatestRelease {
   version: string;
   publishedAt: Date;
   notesUrl: string;
   installers: Partial<Record<Platform, ReleaseAsset>>;
+  /** Smaller per-architecture installers; empty for releases before v2.3.0. */
+  alternates: Record<Platform, AlternateInstaller[]>;
   checksumsUrl: string | null;
 }
 
@@ -41,6 +48,18 @@ const INSTALLER_PATTERNS: Record<Platform, RegExp> = {
   windows: /-windows-universal-installer\.exe$/,
 };
 
+/** Single-architecture installers, in display order. */
+const ALTERNATE_PATTERNS: Record<Platform, { label: string; pattern: RegExp }[]> = {
+  mac: [
+    { label: "Apple Silicon", pattern: /-darwin-arm64\.dmg$/ },
+    { label: "Intel", pattern: /-darwin-amd64\.dmg$/ },
+  ],
+  windows: [
+    { label: "x64", pattern: /-windows-amd64-installer\.exe$/ },
+    { label: "ARM64", pattern: /-windows-arm64-installer\.exe$/ },
+  ],
+};
+
 function toAsset(asset: GitHubAsset): ReleaseAsset {
   return { name: asset.name, url: asset.browser_download_url, size: asset.size };
 }
@@ -52,6 +71,14 @@ function parseRelease(data: GitHubRelease): LatestRelease {
     if (match) installers[platform] = toAsset(match);
   }
 
+  const alternates = { mac: [], windows: [] } as LatestRelease["alternates"];
+  for (const [platform, options] of Object.entries(ALTERNATE_PATTERNS) as [Platform, typeof ALTERNATE_PATTERNS.mac][]) {
+    for (const { label, pattern } of options) {
+      const match = data.assets.find((a) => pattern.test(a.name));
+      if (match) alternates[platform].push({ ...toAsset(match), label });
+    }
+  }
+
   const checksums = data.assets.find((a) => a.name === "SHA256SUMS");
 
   return {
@@ -59,6 +86,7 @@ function parseRelease(data: GitHubRelease): LatestRelease {
     publishedAt: new Date(data.published_at),
     notesUrl: data.html_url,
     installers,
+    alternates,
     checksumsUrl: checksums?.browser_download_url ?? null,
   };
 }
