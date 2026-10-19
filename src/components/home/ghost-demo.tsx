@@ -132,7 +132,7 @@ function Editor() {
 
 const POINTS = [
   { icon: History, title: "Learns from you", body: "Suggestions come from the queries you've actually run." },
-  { icon: WifiOff, title: "Fully offline", body: "No cloud, no API key, no latency. It runs on your machine." },
+  { icon: WifiOff, title: "Fully offline", body: "Runs on your machine. No cloud. No API key." },
   { icon: Zap, title: "One keystroke", body: "Press Tab to accept, keep typing to ignore." },
 ];
 

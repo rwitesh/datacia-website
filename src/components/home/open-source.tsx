@@ -24,21 +24,21 @@ const ACTIONS: Action[] = [
   {
     icon: Star,
     title: "Star the repo",
-    body: "The simplest way to say thanks, and it helps other engineers find DataCia.",
+    body: "The simplest way to say thanks. It helps others find DataCia.",
     cta: "Star on GitHub",
     href: LINKS.repo,
   },
   {
     icon: GitPullRequest,
     title: "Send a pull request",
-    body: "New engines, editor features, fixes and docs are all welcome. The dev guide gets you building in minutes.",
+    body: "New engines, editor features, fixes and docs are all welcome. The dev guide has you building in minutes.",
     cta: "Read the dev guide",
     href: LINKS.development,
   },
   {
     icon: Bug,
     title: "Report an issue",
-    body: "Found a bug or have an idea? Open an issue and help shape what ships next.",
+    body: "Found a bug or have an idea? Tell us, and help shape what ships next.",
     cta: "Open an issue",
     href: LINKS.newIssue,
   },
@@ -99,7 +99,7 @@ export function OpenSource() {
               Free. Open. <span className="text-gradient">Yours.</span>
             </>
           }
-          description="DataCia started as a paid app. Today every feature is free for everyone, and the full source is on GitHub — so it can keep getting better with your help."
+          description="Every feature is free, and the full source is on GitHub. Read it. Build it. Make it better."
         />
 
         <Reveal delay={0.15} className="mt-10">

@@ -15,8 +15,8 @@ export function AnnouncementBar() {
       />
       <span className="rounded-full bg-accent/15 px-2 py-px text-[11px] font-semibold text-accent">New</span>
       <span className="truncate">
-        DataCia is now <span className="font-medium text-foreground">free &amp; open source</span>
-        <span className="hidden sm:inline"> — star it, fork it, make it better</span>
+        DataCia is <span className="font-medium text-foreground">free and open source</span>
+        <span className="hidden sm:inline">. Star it on GitHub.</span>
       </span>
       <ArrowUpRight className="size-3.5 shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
     </a>
