@@ -43,6 +43,7 @@ function AssistantMock() {
       <div className="mb-5 flex items-center gap-2 text-xs text-muted-foreground">
         <Sparkles className="size-3.5 text-accent" />
         AI Assistant
+        <span className="ml-auto rounded-full border border-line px-2 py-0.5 font-sans text-[11px]">Read-only</span>
       </div>
       <div className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-md bg-accent px-4 py-2.5 font-sans text-sm text-accent-foreground">
         Why is this query slow?
@@ -50,12 +51,11 @@ function AssistantMock() {
       <div className="mt-4 max-w-[92%] rounded-2xl rounded-bl-md border border-line bg-surface-raised px-4 py-3 leading-relaxed">
         <p className="font-sans text-sm text-muted-foreground">
           <span className="text-foreground">orders</span> is scanned in full because{" "}
-          <span className="text-accent">user_id</span> has no index. Add one:
+          <span className="text-accent">user_id</span> has no index.
         </p>
-        <pre className="mt-3 overflow-x-auto rounded-lg bg-background/60 p-3 text-[12px]">
-          <span className="text-accent-violet">CREATE INDEX</span> idx_orders_user{"\n"}
-          <span className="text-accent-violet">ON</span> orders (user_id);
-        </pre>
+        <p className="mt-3 font-sans text-sm text-muted-foreground">
+          Every lookup reads all <span className="text-foreground">412,000</span> rows to find a handful.
+        </p>
       </div>
     </div>
   );
@@ -70,13 +70,13 @@ interface Chapter {
 
 const CHAPTERS: Chapter[] = [
   {
-    eyebrow: "SQL editor",
+    eyebrow: "Query editor",
     title: "Write. Format. Run.",
-    body: "Syntax highlighting, autocomplete that knows your tables, one-key formatting and instant execution. Everything stays out of your way until you need it.",
+    body: "Syntax highlighting, autocomplete that knows your tables and one-key formatting. It stays out of your way.",
     visual: (
       <WindowShot
         src={queryImg}
-        alt="SQL editor with a JOIN query and its results below"
+        alt="Query editor with a JOIN query and its results below"
         width={1391}
         height={879}
       />
@@ -84,14 +84,14 @@ const CHAPTERS: Chapter[] = [
   },
   {
     eyebrow: "Script mode",
-    title: "Whole migrations, one click.",
-    body: "Break a script into blocks and run them in order. Each block reports its own status and timing, so you see exactly where things stand.",
+    title: "Whole scripts. One click.",
+    body: "Split a script into blocks and run them in order. Each block shows its own status and time.",
     visual: <PanelShot src={scriptImg} alt="Script mode running three CREATE TABLE blocks" width={961} height={644} />,
   },
   {
     eyebrow: "Results & export",
     title: "Your data, any shape.",
-    body: "A fast grid with sorting, resizing and cell selection. Copy or export the selection as JSON, CSV or a crisp PNG for your next doc.",
+    body: "A fast grid with sorting, resizing and selection. Copy or export as JSON, CSV or PNG.",
     visual: (
       <PanelShot
         src={exportImg}
@@ -104,14 +104,14 @@ const CHAPTERS: Chapter[] = [
   },
   {
     eyebrow: "Row inspector",
-    title: "See rows as JSON.",
-    body: "Select any cells and a side panel shows them as clean JSON, ready to copy into a test, a ticket or an API call.",
+    title: "Rows as JSON.",
+    body: "Select some cells and see them as clean JSON, ready to paste into a test, a ticket or an API call.",
     visual: <WindowShot src={jsonImg} alt="Orders table with selected rows shown as JSON in a side panel" width={1491} height={879} />,
   },
   {
     eyebrow: "AI assistant",
-    title: "Ask in plain English.",
-    body: "Generate SQL, explain plans and fix errors. The assistant reads your schema and runs read-only queries to check its answers. Use Anthropic, OpenAI, Gemini, OpenRouter, OpenCode or a local model, called straight from your machine.",
+    title: "Ask why. Get answers.",
+    body: "Ask about a query, an error or your schema and get a clear explanation. It reads what it needs and never changes your data. Works with Anthropic, OpenAI, Gemini, OpenRouter, OpenCode or a local model.",
     visual: <AssistantMock />,
   },
 ];
@@ -157,7 +157,7 @@ export function FeatureStory() {
               <span className="text-metal">None of the clutter.</span>
             </>
           }
-          description="Every feature that used to sit behind a paywall is now included for everyone."
+          description="Everything is included. There's nothing to unlock."
         />
 
         <div className="mt-16 grid gap-x-12 lg:mt-8 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.5fr)]">

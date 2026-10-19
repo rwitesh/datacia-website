@@ -17,38 +17,38 @@ const TILES: Tile[] = [
   {
     icon: Laptop,
     title: "Local-first, by design",
-    body: "Connections go straight from your machine to your database. Nothing is proxied, nothing is uploaded, no account is needed.",
+    body: "Your machine connects straight to your database. Nothing goes through our servers, and you don't need an account.",
     wide: true,
   },
   {
     icon: Lock,
     title: "Encrypted credentials",
-    body: "Saved passwords are encrypted with a key bound to your device.",
+    body: "Passwords are encrypted with a key tied to your device.",
   },
   {
     icon: KeyRound,
     title: "SSH tunnelling",
-    body: "Reach private databases through a bastion with a password or key.",
+    body: "Reach private databases through a bastion, with a password or key.",
   },
   {
     icon: FolderTree,
     title: "History & saved queries",
-    body: "Search past queries by text and date. Organise the keepers in folders.",
+    body: "Search past queries by text or date. Keep the best in folders.",
   },
   {
     icon: Palette,
     title: "Make it yours",
-    body: "Light, dark or system theme with your choice of fonts and editor colours.",
+    body: "Pick light, dark or system, then choose your fonts and editor colours.",
   },
   {
     icon: RefreshCw,
     title: "Updates itself",
-    body: "New versions download quietly in the background and install on restart.",
+    body: "Updates download in the background and install on restart.",
   },
   {
     icon: Cpu,
     title: "Universal builds",
-    body: "Native on Apple Silicon and Intel Macs, and on x64 and ARM64 Windows. One download covers every machine.",
+    body: "Native on Apple silicon and Intel Macs, and on x64 and ARM64 Windows. One download for every machine.",
     wide: true,
   },
 ];
@@ -58,9 +58,9 @@ export function FeatureGrid() {
     <section className="py-24 sm:py-32">
       <Container>
         <SectionHeading
-          eyebrow="Thoughtful details"
+          eyebrow="Details"
           title="Small things, done right."
-          description="The quiet features you'll only notice because they're always there."
+          description="The things you notice only because they always work."
         />
 
         <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

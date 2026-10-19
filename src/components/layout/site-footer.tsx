@@ -45,7 +45,7 @@ export function SiteFooter() {
               DataCia
             </Link>
             <p className="mt-4 max-w-xs text-[13px] leading-relaxed text-muted-foreground">
-              A fast, free and open-source SQL client for PostgreSQL, MySQL, SQLite and ClickHouse.
+              An AI-assisted, local-first database client. Free and open source.
             </p>
           </div>
 
@@ -73,7 +73,7 @@ export function SiteFooter() {
 
         <div className="mt-16 flex flex-col-reverse items-start justify-between gap-4 border-t border-line pt-8 sm:flex-row sm:items-center">
           <p className="text-xs text-subtle-foreground">
-            © {new Date().getFullYear()} DataCia. Free and open source, built in the open.
+            © {new Date().getFullYear()} DataCia. Built in the open.
           </p>
           <a href={LINKS.repo} target="_blank" rel="noopener noreferrer" className={`${linkClass} inline-flex items-center gap-2`}>
             <GitHubIcon className="size-4" />

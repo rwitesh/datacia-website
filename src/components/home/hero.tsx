@@ -23,7 +23,7 @@ function ReleasePill() {
       className="group inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 py-1 pr-3 pl-1 text-[13px] text-muted-foreground transition-colors hover:border-line-strong hover:text-foreground"
     >
       <span className="rounded-full bg-foreground px-2 py-0.5 text-[11px] font-semibold text-background">
-        Free forever
+        Free
       </span>
       Open source{release && <span className="font-mono text-xs text-subtle-foreground">v{release.version}</span>}
       <ArrowUpRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -135,8 +135,7 @@ export function Hero() {
 
         <Reveal immediate delay={0.55}>
           <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-pretty text-muted-foreground sm:text-xl">
-            A native-feeling SQL client for PostgreSQL, MySQL, SQLite and ClickHouse. Local-first, AI-assisted — and
-            now completely free and open source.
+            An AI-assisted database client that runs on your machine. Free and open source.
           </p>
         </Reveal>
 
@@ -153,7 +152,7 @@ export function Hero() {
               Star on GitHub
             </a>
           </div>
-          <p className="mt-5 text-[13px] text-subtle-foreground">macOS &amp; Windows · No account · No paywall</p>
+          <p className="mt-5 text-[13px] text-subtle-foreground">macOS &amp; Windows · Free · No account</p>
         </Reveal>
 
         <HeroShowcase />
