@@ -17,7 +17,7 @@ const TILES: Tile[] = [
   {
     icon: Laptop,
     title: "Local-first, by design",
-    body: "Your machine talks straight to your database. Nothing proxied. Nothing uploaded. No account.",
+    body: "Your machine connects straight to your database. Nothing goes through our servers, and you don't need an account.",
     wide: true,
   },
   {
@@ -38,7 +38,7 @@ const TILES: Tile[] = [
   {
     icon: Palette,
     title: "Make it yours",
-    body: "Light, dark or system. Your fonts. Your editor colours.",
+    body: "Pick light, dark or system, then choose your fonts and editor colours.",
   },
   {
     icon: RefreshCw,

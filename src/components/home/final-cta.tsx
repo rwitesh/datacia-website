@@ -25,7 +25,7 @@ export function FinalCta() {
         </Reveal>
         <Reveal delay={0.1}>
           <p className="mx-auto mt-6 max-w-md text-lg text-muted-foreground">
-            Free. No sign-up. No trial.
+            Free to use. No sign-up, no trial.
           </p>
         </Reveal>
         <Reveal delay={0.15}>

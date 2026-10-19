@@ -80,7 +80,7 @@ function Editor() {
           <span className="size-3 rounded-full bg-[#febc2e]" />
           <span className="size-3 rounded-full bg-[#28c840]" />
         </div>
-        <span className="font-mono text-xs text-subtle-foreground">Query 1 — chinook.db</span>
+        <span className="font-mono text-xs text-subtle-foreground">Query 1 · chinook.db</span>
         <span className="inline-flex items-center gap-1.5 rounded-md bg-success/15 px-2 py-1 text-[11px] font-medium text-success">
           <Play className="size-3 fill-current" /> Run
         </span>
@@ -132,7 +132,7 @@ function Editor() {
 
 const POINTS = [
   { icon: History, title: "Learns from you", body: "Suggestions come from the queries you've actually run." },
-  { icon: WifiOff, title: "Fully offline", body: "Runs on your machine. No cloud. No API key." },
+  { icon: WifiOff, title: "Fully offline", body: "It runs on your machine, with no cloud and no API key." },
   { icon: Zap, title: "One keystroke", body: "Press Tab to accept, keep typing to ignore." },
 ];
 

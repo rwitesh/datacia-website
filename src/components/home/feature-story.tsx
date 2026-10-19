@@ -70,13 +70,13 @@ interface Chapter {
 
 const CHAPTERS: Chapter[] = [
   {
-    eyebrow: "SQL editor",
+    eyebrow: "Query editor",
     title: "Write. Format. Run.",
     body: "Syntax highlighting, autocomplete that knows your tables and one-key formatting. It stays out of your way.",
     visual: (
       <WindowShot
         src={queryImg}
-        alt="SQL editor with a JOIN query and its results below"
+        alt="Query editor with a JOIN query and its results below"
         width={1391}
         height={879}
       />
@@ -105,13 +105,13 @@ const CHAPTERS: Chapter[] = [
   {
     eyebrow: "Row inspector",
     title: "Rows as JSON.",
-    body: "Select any cells. See clean JSON. Copy it into a test, a ticket or an API call.",
+    body: "Select some cells and see them as clean JSON, ready to paste into a test, a ticket or an API call.",
     visual: <WindowShot src={jsonImg} alt="Orders table with selected rows shown as JSON in a side panel" width={1491} height={879} />,
   },
   {
     eyebrow: "AI assistant",
     title: "Ask why. Get answers.",
-    body: "Ask about a query, an error or your schema, and get a clear explanation. The assistant only reads. It never changes your data. Use Anthropic, OpenAI, Gemini, OpenRouter, OpenCode or a local model.",
+    body: "Ask about a query, an error or your schema and get a clear explanation. It reads what it needs and never changes your data. Works with Anthropic, OpenAI, Gemini, OpenRouter, OpenCode or a local model.",
     visual: <AssistantMock />,
   },
 ];
@@ -157,7 +157,7 @@ export function FeatureStory() {
               <span className="text-metal">None of the clutter.</span>
             </>
           }
-          description="Every feature. Included for everyone."
+          description="Everything is included. There's nothing to unlock."
         />
 
         <div className="mt-16 grid gap-x-12 lg:mt-8 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.5fr)]">

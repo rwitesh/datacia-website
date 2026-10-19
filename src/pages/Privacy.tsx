@@ -7,7 +7,7 @@ import { LINKS, SUPPORT_EMAIL } from "@/lib/site";
 const LAST_UPDATED = "October 17, 2026";
 
 const AT_A_GLANCE = [
-  "No account, licence or payment — DataCia is free",
+  "DataCia is free, with no account or licence",
   "Your credentials, queries and data never reach us",
   "AI is optional and talks only to the provider you choose",
   "Anonymous error reports, which you can turn off",
@@ -75,7 +75,7 @@ export default function PrivacyPage() {
             <li>Operating system, OS version and CPU architecture</li>
             <li>App version</li>
             <li>
-              A <strong>hardware ID</strong> — a one-way SHA-256 hash of your device identifier. It can't be reversed
+              A <strong>hardware ID</strong>: a one-way SHA-256 hash of your device identifier. It can't be reversed
               and isn't linked to any personal information; it only lets us group errors from the same machine.
             </li>
           </ul>
@@ -95,7 +95,7 @@ export default function PrivacyPage() {
         <Section id="not-collected" title="What we never collect">
           <ul>
             <li>
-              <strong>Database credentials</strong> — stored only on your device, encrypted with a key bound to that
+              <strong>Database credentials</strong>, which are stored only on your device, encrypted with a key bound to that
               machine
             </li>
             <li>
@@ -105,7 +105,7 @@ export default function PrivacyPage() {
               <strong>AI API keys, prompts or responses</strong>
             </li>
             <li>
-              <strong>Accounts or contact details</strong> — the app has no sign-in
+              <strong>Accounts or contact details</strong>, since the app has no sign-in
             </li>
           </ul>
         </Section>

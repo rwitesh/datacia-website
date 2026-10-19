@@ -135,7 +135,7 @@ export function Hero() {
 
         <Reveal immediate delay={0.55}>
           <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-pretty text-muted-foreground sm:text-xl">
-            The SQL client for PostgreSQL, MySQL, SQLite and ClickHouse. Fast, local and open source.
+            An AI-assisted database client that runs on your machine. Free and open source.
           </p>
         </Reveal>
 

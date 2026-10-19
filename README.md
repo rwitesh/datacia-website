@@ -1,7 +1,7 @@
 # datacia.app
 
-The website for [DataCia](https://github.com/rwitesh/datacia) — a free, open-source SQL client for
-PostgreSQL, MySQL, SQLite and ClickHouse.
+The website for [DataCia](https://github.com/rwitesh/datacia), an AI-assisted, local-first database
+client. Free and open source.
 
 Built with [Bun](https://bun.com), React 19, Tailwind CSS v4 and [Motion](https://motion.dev).
 

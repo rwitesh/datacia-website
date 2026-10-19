@@ -99,7 +99,7 @@ export function OpenSource() {
               Free. Open. <span className="text-gradient">Yours.</span>
             </>
           }
-          description="Every feature is free, and the full source is on GitHub. Read it. Build it. Make it better."
+          description="Every feature is free and the full source is on GitHub. Read it, build it, or help make it better."
         />
 
         <Reveal delay={0.15} className="mt-10">

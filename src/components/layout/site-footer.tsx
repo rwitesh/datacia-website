@@ -45,7 +45,7 @@ export function SiteFooter() {
               DataCia
             </Link>
             <p className="mt-4 max-w-xs text-[13px] leading-relaxed text-muted-foreground">
-              A fast, open-source SQL client for PostgreSQL, MySQL, SQLite and ClickHouse.
+              An AI-assisted, local-first database client. Free and open source.
             </p>
           </div>
 
