@@ -1,15 +1,15 @@
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowDown, ArrowUpRight, CircleAlert, ShieldCheck } from "lucide-react";
+import { ArrowDown, ArrowUpRight, ChevronDown, CircleAlert, ShieldCheck } from "lucide-react";
 import { PLATFORM_ICON, type DownloadRouteState } from "@/components/download/download-button";
 import { EASE_APPLE, Reveal } from "@/components/motion/reveal";
 import { buttonVariants } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { useLatestRelease, type ReleaseStatus } from "@/hooks/useLatestRelease";
-import { usePlatform } from "@/hooks/usePlatform";
-import { PLATFORM_LABEL, PLATFORMS, type Platform } from "@/lib/platform";
-import { formatBytes, formatReleaseDate, type LatestRelease } from "@/lib/releases";
+import { useArch, usePlatform } from "@/hooks/usePlatform";
+import { PLATFORM_LABEL, PLATFORMS, type Arch, type Platform } from "@/lib/platform";
+import { formatBytes, formatReleaseDate, type Build, type LatestRelease, type ReleaseAsset } from "@/lib/releases";
 import { LINKS } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -17,6 +17,25 @@ const PLATFORM_DETAILS: Record<Platform, { requirement: string; format: string }
   mac: { requirement: "Apple Silicon & Intel", format: "Disk image (.dmg)" },
   windows: { requirement: "Windows 10 or later · x64 & ARM64", format: "Installer (.exe)" },
 };
+
+/** Builds in the order the picker lists them. */
+const BUILD_OPTIONS: Record<Platform, { build: Build; label: string; hint: string }[]> = {
+  mac: [
+    { build: "arm64", label: "Apple Silicon", hint: "M1 and later" },
+    { build: "amd64", label: "Intel", hint: "Intel-based Macs" },
+    { build: "universal", label: "Universal", hint: "Any Mac" },
+  ],
+  windows: [
+    { build: "amd64", label: "x64", hint: "Most Windows PCs" },
+    { build: "arm64", label: "ARM64", hint: "Snapdragon PCs" },
+    { build: "universal", label: "Universal", hint: "Any PC" },
+  ],
+};
+
+/** Offer the visitor's own architecture when we know it; universal runs everywhere otherwise. */
+function defaultBuild(installers: Partial<Record<Build, ReleaseAsset>>, arch: Arch | null | undefined): Build {
+  return arch && installers[arch] ? arch : "universal";
+}
 
 const INSTALL_STEPS: Record<Platform, string[]> = {
   mac: [
@@ -50,21 +69,46 @@ function PlatformCard({
   release,
   status,
   recommended,
+  arch,
 }: {
   platform: Platform;
   release: LatestRelease | null;
   status: ReleaseStatus;
   recommended: boolean;
+  /** The visitor's architecture on their own platform; `null` for the other one. */
+  arch: Arch | null | undefined;
 }) {
   const Icon = PLATFORM_ICON[platform];
-  const asset = release?.installers[platform];
-  const alternates = release?.alternates[platform] ?? [];
   const details = PLATFORM_DETAILS[platform];
+  const installers = release?.installers[platform] ?? {};
+  const options = BUILD_OPTIONS[platform].filter((option) => installers[option.build]);
+  const [choice, setChoice] = useState<Build | null>(null);
+
+  const fallback = defaultBuild(installers, arch);
+  const build = choice ?? fallback;
+  const asset = installers[build];
+  const label = BUILD_OPTIONS[platform].find((option) => option.build === build)!.label;
+  const pending = status === "loading" || arch === undefined;
+  // The card already names the OS, so with a choice of builds the button names the build.
+  const action =
+    options.length < 2 || pending
+      ? `Download for ${PLATFORM_LABEL[platform]}`
+      : build === "universal"
+        ? "Download Universal"
+        : `Download for ${label}`;
+
+  // Only explain the default on the visitor's own platform, and only while it's selected.
+  const note =
+    build !== fallback || arch === undefined || options.length < 2 || !recommended
+      ? null
+      : arch && build === arch
+        ? `Matched to your ${platform === "mac" ? "Mac" : "PC"}.`
+        : `We couldn't detect your ${platform === "mac" ? "Mac's chip" : "PC's processor"}, so this is the universal build.`;
 
   return (
     <div
       className={cn(
-        "relative flex flex-col items-center rounded-2xl border bg-surface p-8 text-center transition-colors sm:p-10",
+        "relative flex flex-col items-center rounded-2xl border bg-surface p-6 text-center transition-colors sm:p-10",
         recommended ? "border-accent/50 shadow-[0_0_0_1px_var(--accent),0_30px_80px_-40px_var(--accent)]" : "border-line",
       )}
     >
@@ -77,54 +121,47 @@ function PlatformCard({
       <h2 className="mt-6 text-2xl font-semibold tracking-tight">{PLATFORM_LABEL[platform]}</h2>
       <p className="mt-1 text-sm text-muted-foreground">{details.requirement}</p>
 
+      {options.length > 1 && !pending && (
+        <div className="relative mt-8 w-full">
+          <select
+            aria-label={`${PLATFORM_LABEL[platform]} build`}
+            value={build}
+            onChange={(event) => setChoice(event.target.value as Build)}
+            className="h-11 w-full cursor-pointer appearance-none truncate rounded-full border border-line-strong bg-foreground/[0.04] pr-10 pl-5 text-[13px] text-foreground sm:text-sm transition-colors hover:bg-foreground/[0.09] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          >
+            {options.map((option) => (
+              <option key={option.build} value={option.build}>
+                {option.label} · {option.hint} · {formatBytes(installers[option.build]!.size)}
+              </option>
+            ))}
+          </select>
+          <ChevronDown className="pointer-events-none absolute top-1/2 right-4 size-4 -translate-y-1/2 text-muted-foreground" />
+        </div>
+      )}
+
       <a
         href={asset?.url ?? LINKS.latestRelease}
         {...(asset ? {} : { target: "_blank", rel: "noopener noreferrer" })}
-        className={cn(buttonVariants({ variant: recommended ? "primary" : "secondary", size: "lg" }), "mt-8 w-full")}
+        className={cn(
+          buttonVariants({ variant: recommended ? "primary" : "secondary", size: "lg" }),
+          options.length > 1 && !pending ? "mt-3" : "mt-8",
+          "w-full px-5",
+        )}
       >
-        {asset || status === "loading" ? <ArrowDown /> : <ArrowUpRight />}
-        {asset || status === "loading" ? `Download for ${PLATFORM_LABEL[platform]}` : "Get it on GitHub"}
+        {asset || pending ? <ArrowDown /> : <ArrowUpRight />}
+        {asset || pending ? action : "Get it on GitHub"}
       </a>
 
       <p className="mt-4 h-4 font-mono text-[11px] text-subtle-foreground">
-        {asset
-          ? `${alternates.length > 0 ? "Universal · " : ""}${details.format} · ${formatBytes(asset.size)}`
-          : status === "loading"
-            ? ""
-            : details.format}
+        {asset && !pending ? `${details.format} · ${formatBytes(asset.size)}` : pending ? "" : details.format}
       </p>
-
-      {alternates.length > 0 && (
-        <p className="mt-3 text-xs text-muted-foreground">
-          Other downloads:{" "}
-          {alternates.map((alt, i) => (
-            <Fragment key={alt.name}>
-              {i > 0 && " · "}
-              <span className="whitespace-nowrap">
-                <a href={alt.url} title={alt.name} className="font-medium text-accent hover:underline">
-                  {alt.label}
-                </a>{" "}
-                <span className="font-mono text-[11px] text-subtle-foreground">{formatBytes(alt.size)}</span>
-              </span>
-            </Fragment>
-          ))}
-        </p>
-      )}
+      {note && <p className="mt-2 text-xs text-balance text-muted-foreground">{note}</p>}
     </div>
   );
 }
 
-function StartedNotice({
-  platform,
-  release,
-  status,
-}: {
-  platform: Platform;
-  release: LatestRelease | null;
-  status: ReleaseStatus;
-}) {
-  const asset = release?.installers[platform];
-  const failed = status === "error" || (status === "ready" && !asset);
+function StartedNotice({ asset, status }: { asset: ReleaseAsset | null | undefined; status: ReleaseStatus }) {
+  const failed = status === "error" || asset === null;
 
   return (
     <motion.div
@@ -172,16 +209,26 @@ function StartedNotice({
 export default function DownloadPage() {
   const { status, release } = useLatestRelease();
   const detected = usePlatform();
+  const arch = useArch(detected);
   const requested = useRequestedDownload();
   const startedRef = useRef(false);
 
+  // The requested installer: `undefined` until the release and architecture are known, `null` if missing.
+  const requestedArch = requested === detected ? arch : null;
+  const requestedInstallers = requested && release?.installers[requested];
+  const requestedAsset =
+    requestedInstallers && requestedArch !== undefined
+      ? (requestedInstallers[defaultBuild(requestedInstallers, requestedArch)] ?? null)
+      : status === "error"
+        ? null
+        : undefined;
+
   // Start the requested installer as soon as its URL is known.
   useEffect(() => {
-    const url = requested && release?.installers[requested]?.url;
-    if (!url || startedRef.current) return;
+    if (!requestedAsset || startedRef.current) return;
     startedRef.current = true;
-    window.location.assign(url);
-  }, [requested, release]);
+    window.location.assign(requestedAsset.url);
+  }, [requestedAsset]);
 
   const highlighted = requested ?? detected;
 
@@ -193,7 +240,7 @@ export default function DownloadPage() {
       />
 
       <Container className="py-20 sm:py-28">
-        <AnimatePresence>{requested && <StartedNotice platform={requested} release={release} status={status} />}</AnimatePresence>
+        <AnimatePresence>{requested && <StartedNotice asset={requestedAsset} status={status} />}</AnimatePresence>
 
         <div className="text-center">
           <Reveal immediate>
@@ -217,10 +264,16 @@ export default function DownloadPage() {
           </Reveal>
         </div>
 
-        <div className="mx-auto mt-16 grid max-w-4xl gap-6 md:grid-cols-2">
+        <div className="mx-auto mt-16 grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-2">
           {PLATFORMS.map((platform, i) => (
             <Reveal key={platform} immediate delay={0.15 + i * 0.08}>
-              <PlatformCard platform={platform} release={release} status={status} recommended={platform === highlighted} />
+              <PlatformCard
+                platform={platform}
+                release={release}
+                status={status}
+                recommended={platform === highlighted}
+                arch={platform === detected ? arch : null}
+              />
             </Reveal>
           ))}
         </div>
