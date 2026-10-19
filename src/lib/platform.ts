@@ -30,7 +30,7 @@ export function detectPlatform(): Platform | null {
 /** CPU architectures DataCia ships single-architecture builds for. */
 export type Arch = "arm64" | "amd64";
 
-type UADataWithHints = { getHighEntropyValues?: (hints: string[]) => Promise<{ architecture?: string }> };
+type UADataWithHints = { getHighEntropyValues?: (hints: string[]) => Promise<{ architecture?: string; bitness?: string }> };
 
 /**
  * Best-effort guess of the visitor's CPU architecture. Returns `null` when we
@@ -40,9 +40,9 @@ export async function detectArch(platform: Platform): Promise<Arch | null> {
   const uaData = (navigator as Navigator & { userAgentData?: UADataWithHints }).userAgentData;
   try {
     // Chromium reports the real architecture, including "arm" on Apple Silicon.
-    const { architecture } = (await uaData?.getHighEntropyValues?.(["architecture", "bitness"])) ?? {};
+    const { architecture, bitness } = (await uaData?.getHighEntropyValues?.(["architecture", "bitness"])) ?? {};
     if (architecture === "arm") return "arm64";
-    if (architecture === "x86") return "amd64";
+    if (architecture === "x86" && bitness === "64") return "amd64";
   } catch {
     // Hints were refused; fall through to the heuristics below.
   }

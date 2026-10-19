@@ -12,7 +12,9 @@ export function useArch(platform: Platform | null): Arch | null | undefined {
   useEffect(() => {
     if (!platform) return;
     let active = true;
-    detectArch(platform).then((result) => active && setArch(result));
+    detectArch(platform)
+      .catch(() => null)
+      .then((result) => active && setArch(result));
     return () => {
       active = false;
     };

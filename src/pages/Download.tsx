@@ -32,7 +32,9 @@ const BUILD_OPTIONS: Record<Platform, { build: Build; label: string; hint: strin
 
 /** Offer the visitor's own architecture when we know it; universal runs everywhere otherwise. */
 function defaultBuild(installers: Partial<Record<Build, ReleaseAsset>>, arch: Arch | null | undefined): Build {
-  return arch && installers[arch] ? arch : "universal";
+  if (arch && installers[arch]) return arch;
+  // Fall back to whatever the release has, so the picker's value is always one of its options.
+  return installers.universal ? "universal" : ((Object.keys(installers)[0] as Build | undefined) ?? "universal");
 }
 
 const INSTALL_STEPS: Record<Platform, string[]> = {
@@ -87,7 +89,9 @@ function PlatformCard({
       ? null
       : arch && build === arch
         ? `Matched to your ${platform === "mac" ? "Mac" : "PC"}.`
-        : `We couldn't detect your ${platform === "mac" ? "Mac's chip" : "PC's processor"}, so this is the universal build.`;
+        : build === "universal"
+          ? `We couldn't detect your ${platform === "mac" ? "Mac's chip" : "PC's processor"}, so this is the universal build.`
+          : null;
 
   return (
     <div
